@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Règlement Général — Weaves FA | Codex Officiel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Space Grotesk', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        codex: {
+                            bg: '#0b0b0d',
+                            surface: '#131317',
+                            elevated: '#19191f',
+                            border: '#26262e',
+                            borderLight: '#34343f',
+                            ink: '#f4f4f6',
+                            muted: '#9ca3af',
+                            subtle: '#6b7280',
+                            gold: '#e5a93c',
+                            goldDim: 'rgba(229, 169, 60, 0.12)',
+                            crimson: '#dc4c46',
+                            crimsonDim: 'rgba(220, 76, 70, 0.12)',
+                            sage: '#3da374',
+                            sageDim: 'rgba(61, 163, 116, 0.12)',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Texture subtile de papier sombre et barre de défilement sobre */
+        body {
+            background-color: #0b0b0d;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0b0d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #26262e;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f3f4a;
+        }
+        .toc-link.active {
+            color: #f4f4f6;
+            border-left-color: #e5a93c;
+            background: linear-gradient(90deg, rgba(229, 169, 60, 0.08) 0%, transparent 100%);
+        }
+        .toc-link.active .toc-num {
+            color: #e5a93c;
+        }
+        .article-row {
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .article-row:hover {
+            background-color: #16161b;
+            border-color: #34343f;
+        }
+    </style>
+</head>
+<body class="text-codex-ink font-sans antialiased selection:bg-codex-gold/25 selection:text-codex-gold">
+
+    <!-- Ligne de progression de lecture ultra-fine en haut -->
+    <div class="fixed top-0 left-0 right-0 h-[2px] bg-codex-border z-50">
+        <div id="reading-progress" class="h-full bg-codex-gold w-0 transition-all duration-150"></div>
+    </div>
+
+    <!-- Barre Supérieure Sticky Éditoriale -->
+    <header class="sticky top-0 z-40 bg-codex-bg/90 backdrop-blur-md border-b border-codex-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+            <!-- Identité Serveur -->
+            <div class="flex items-center gap-3.5">
+                <button id="mobile-menu-btn" aria-label="Menu" class="lg:hidden p-2 rounded-lg border border-codex-border bg-codex-surface text-codex-ink hover:border-codex-borderLight transition">
+                    <i class="fa-solid fa-bars-staggered text-sm"></i>
+                </button>
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-8 h-8 rounded-md bg-codex-gold text-codex-bg font-display font-bold text-base flex items-center justify-center tracking-tighter">
+                        W
+                    </div>
+                    <div class="flex items-baseline gap-2.5">
+                        <span class="font-display font-bold text-base sm:text-lg tracking-tight text-codex-ink">WEAVES FA</span>
+                        <span class="hidden sm:inline-block text-xs font-mono text-codex-subtle">/ CODEX GÉNÉRAL</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Recherche Rapide (Ctrl + K) -->
+            <div class="flex-1 max-w-md">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-codex-subtle text-xs"></i>
+                    <input type="text" id="search-input" placeholder="Rechercher un article, une règle (ex: GEN-15, MetaGaming, REC...)" 
+                           class="w-full bg-codex-surface border border-codex-border focus:border-codex-gold rounded-lg pl-9 pr-16 py-1.5 text-xs sm:text-sm text-codex-ink placeholder-codex-subtle focus:outline-none transition">
+                    <kbd id="search-shortcut" class="hidden sm:inline-flex items-center gap-1 absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[10px] font-mono text-codex-subtle bg-codex-elevated border border-codex-border rounded">
+                        Ctrl K
+                    </kbd>
+                    <button id="clear-search" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] font-mono text-codex-gold hover:underline">
+                        Effacer
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statut & Mode Compact -->
+            <div class="hidden md:flex items-center gap-4 text-xs">
+                <span id="search-count" class="hidden font-mono text-codex-gold"></span>
+                <div class="flex items-center gap-2 text-codex-muted font-mono">
+                    <span class="w-1.5 h-1.5 rounded-full bg-codex-sage"></span>
+                    <span>REV. 2026 • GEN-01—45</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Drawer Mobile Sommaire -->
+    <div id="mobile-drawer" class="fixed inset-0 z-50 hidden lg:hidden">
+        <div id="mobile-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-xs"></div>
+        <div class="fixed top-0 left-0 bottom-0 w-72 bg-codex-surface border-r border-codex-border p-6 flex flex-col justify-between z-10">
+            <div>
+                <div class="flex items-center justify-between pb-5 mb-5 border-b border-codex-border">
+                    <span class="font-display font-bold text-sm tracking-wider uppercase text-codex-gold">Sommaire Officiel</span>
+                    <button id="close-mobile-btn" class="text-codex-muted hover:text-codex-ink p-1">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <nav class="space-y-1" id="mobile-nav-links">
+                    <!-- Cloné depuis le sommaire desktop -->
+                </nav>
+            </div>
+            <div class="pt-4 border-t border-codex-border text-[11px] font-mono text-codex-subtle">
+                WEAVES FA • LOS SANTOS CODEX
+            </div>
+        </div>
+    </div>
+
+    <!-- Layout Principal Asymétrique (Sommaire Latéral Éditorial + Colonne de Lecture) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+        <div class="lg:grid lg:grid-cols-12 lg:gap-12 items-start">
+
+            <!-- COLONNE GAUCHE : Sommaire Interactif Sticky (3 colonnes) -->
+            <aside class="hidden lg:block lg:col-span-3 sticky top-24 space-y-6">
+                <div>
+                    <p class="text-[11px] font-mono uppercase tracking-widest text-codex-subtle mb-3 px-3">Index des Chapitres</p>
+                    <nav class="space-y-0.5 border-l border-codex-border" id="desktop-toc">
+                        <a href="#chapitre-1" class="toc-link active flex items-center gap-3 pl-3.5 pr-2 py-2 text-[13px] font-medium text-codex-muted hover:text-codex-ink border-l-2 border-transparent -ml-[1px] transition">
+                            <span class="toc-num font-mono text-[11px] text-codex-subtle">01</span>
+                            <span>Accès & Respect HRP</span>
+                        </a>
+                        <a href="#chapitre-2" class="toc-link flex items-center gap-3 pl-3.5 pr-2 py-2 text-[13px] font-medium text-codex-muted hover:text-codex-ink border-l-2 border-transparent -ml-[1px] transition">
+                            <span class="toc-num font-mono text-[11px] text-codex-subtle">02</span>
+                            <span>Triche, Mods & Crashs</span>
+                        </a>
+                        <a href="#chapitre-3" class="toc-link flex items-center gap-3 pl-3.5 pr-2 py-2 text-[13px] font-medium text-codex-muted hover:text-codex-ink border-l-2 border-transparent -ml-[1px] transition">
+                            <span class="toc-num font-mono text-[11px] text-codex-subtle">03</span>
+                            <span>Notions Fondamentales (16)</span>
+                        </a>
+                        <a href="#chapitre-4" class="toc-link flex items-center gap-3 pl-3.5 pr-2 py-2 text-[13px] font-medium text-codex-muted hover:text-codex-ink border-l-2 border-transparent -ml-[1px] transition">
+                            <span class="toc-num font-mono text-[11px] text-codex-subtle">04</span>
+                            <span>Personnages, Coma & Mort</span>
+                        </a>
+                        <a href="#chapitre-5" class="toc-link flex items-center gap-3 pl-3.5 pr-2 py-2 text-[13px] font-medium text-codex-muted hover:text-codex-ink border-l-2 border-transparent -ml-[1px] transition">
+                            <span class="toc-num font-mono text-[11px] text-codex-subtle">05</span>
+                            <span>Conduite & Véhicules</span>
+                        </a>
+                        <a href="#chapitre-6" class="toc-link flex items-center gap-3 pl-3.5 pr-2 py-2 text-[13px] font-medium text-codex-muted hover:text-codex-ink border-l-2 border-transparent -ml-[1px] transition">
+                            <span class="toc-num font-mono text-[11px] text-codex-subtle">06</span>
+                            <span>Safe Zones & Lieux Sûrs</span>
+                        </a>
+                        <a href="#chapitre-7" class="toc-link flex items-center gap-3 pl-3.5 pr-2 py-2 text-[13px] font-medium text-codex-muted hover:text-codex-ink border-l-2 border-transparent -ml-[1px] transition">
+                            <span class="toc-num font-mono text-[11px] text-codex-subtle">07</span>
+                            <span>Scènes Sensibles & Civils</span>
+                        </a>
+                        <a href="#chapitre-8" class="toc-link flex items-center gap-3 pl-3.5 pr-2 py-2 text-[13px] font-medium text-codex-muted hover:text-codex-ink border-l-2 border-transparent -ml-[1px] transition">
+                            <span class="toc-num font-mono text-[11px] text-codex-subtle">08</span>
+                            <span>Streaming, Discord & REC</span>
+                        </a>
+                        <a href="#chapitre-9" class="toc-link flex items-center gap-3 pl-3.5 pr-2 py-2 text-[13px] font-medium text-codex-muted hover:text-codex-ink border-l-2 border-transparent -ml-[1px] transition">
+                            <span class="toc-num font-mono text-[11px] text-codex-subtle">09</span>
+                            <span>Barème des Sanctions</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Encart Progression Sobre -->
+                <div class="p-4 rounded-xl bg-codex-surface border border-codex-border">
+                    <div class="flex items-center justify-between text-xs mb-2">
+                        <span class="text-codex-muted">Progression</span>
+                        <span id="sidebar-progress-text" class="font-mono text-codex-gold font-semibold">0%</span>
+                    </div>
+                    <div class="w-full h-1 bg-codex-bg rounded-full overflow-hidden">
+                        <div id="sidebar-progress-bar" class="h-full bg-codex-gold w-0 transition-all duration-150"></div>
+                    </div>
+                    <p class="text-[11px] text-codex-subtle mt-3 leading-relaxed">
+                        Astuce : Appuyez sur <kbd class="px-1 py-0.5 bg-codex-elevated border border-codex-border rounded text-codex-muted font-mono">Ctrl + K</kbd> pour filtrer instantanément un article.
+                    </p>
+                </div>
+            </aside>
+
+            <!-- COLONNE DROITE : Contenu Éditorial (9 colonnes) -->
+            <main class="lg:col-span-9 space-y-16" id="content-wrapper">
+
+                <!-- ===================================================================== -->
+                <!-- EN-TÊTE ÉDITORIAL (HERO)                                              -->
+                <!-- ===================================================================== -->
+                <section class="border-b border-codex-border pb-10">
+                    <div class="flex items-center gap-3 text-xs font-mono text-codex-gold uppercase tracking-widest mb-4">
+                        <span>San Andreas • Los Santos</span>
+                        <span class="text-codex-borderLight">•</span>
+                        <span>Charte Générale du Serveur</span>
+                    </div>
+
+                    <h1 class="font-display text-4xl sm:text-5xl lg:text-[54px] font-bold text-codex-ink tracking-tight leading-[1.08] mb-5">
+                        Règlement Général<br>
+                        <span class="text-codex-muted">Weaves FA</span>
+                    </h1>
+
+                    <p class="text-codex-muted text-base sm:text-lg max-w-2xl leading-relaxed mb-8">
+                        La connexion à <strong class="text-codex-ink font-semibold">Weaves FA</strong> (FiveM et Discord) vaut acceptation pleine et sans réserve du présent codex. L'ignorance des articles (<span class="font-mono text-xs text-codex-gold">GEN-01</span> à <span class="font-mono text-xs text-codex-gold">GEN-45</span>) ne constitue jamais une excuse valable. Privilégiez toujours la cohérence narrative à la victoire personnelle.
+                    </p>
+
+                    <!-- 4 Indicateurs Clés en Ligne Fine -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 border-t border-b border-codex-border divide-y sm:divide-y-0 sm:divide-x divide-codex-border bg-codex-surface/50 rounded-xl overflow-hidden">
+                        <div class="p-4">
+                            <span class="block font-mono text-[11px] uppercase tracking-wider text-codex-subtle">Économie</span>
+                            <span class="block font-display font-bold text-sm sm:text-base text-codex-ink mt-1">Semi-Réaliste</span>
+                        </div>
+                        <div class="p-4">
+                            <span class="block font-mono text-[11px] uppercase tracking-wider text-codex-subtle">Tolérance HRP</span>
+                            <span class="block font-display font-bold text-sm sm:text-base text-codex-crimson mt-1">Zéro Toxicité</span>
+                        </div>
+                        <div class="p-4">
+                            <span class="block font-mono text-[11px] uppercase tracking-wider text-codex-subtle">Fondamentaux</span>
+                            <span class="block font-display font-bold text-sm sm:text-base text-codex-gold mt-1">16 Notions RP</span>
+                        </div>
+                        <div class="p-4">
+                            <span class="block font-mono text-[11px] uppercase tracking-wider text-codex-subtle">Litiges & Tickets</span>
+                            <span class="block font-display font-bold text-sm sm:text-base text-codex-ink mt-1">REC 2–5 min</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ===================================================================== -->
+                <!-- CHAPITRE 01 : ACCÈS, PRÉREQUIS TECHNIQUES & RESPECT HRP               -->
+                <!-- ===================================================================== -->
+                <section id="chapitre-1" class="rule-section scroll-mt-24 space-y-5">
+                    <div class="flex items-baseline justify-between border-b border-codex-border pb-3">
+                        <div>
+                            <span class="font-mono text-xs text-codex-gold uppercase tracking-wider">Chapitre 01</span>
+                            <h2 class="font-display text-2xl font-bold text-codex-ink mt-0.5">Accès, Prérequis Techniques & Respect HRP</h2>
+                        </div>
+                        <span class="font-mono text-xs text-codex-subtle hidden sm:inline">GEN-01 — GEN-06</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Microphone & Qualité Audio</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-01</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Un microphone fonctionnel, audible et exempt de saturation, d'écho ou de bruits parasites constants est <strong class="text-codex-ink font-medium">strictement obligatoire</strong>. L'usage d'un modificateur de voix (Voice Changer) est interdit, sauf dérogation exceptionnelle validée sur dossier RP par le Staff (maladie vocale cohérente ou personnage masqué scénarisé).
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Langue Francophone & Cohérence</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-02</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                <strong class="text-codex-ink font-medium">Weaves FA</strong> est un serveur exclusivement francophone. L'emploi d'expressions ou d'une langue étrangère est toléré uniquement de manière ponctuelle si cela correspond aux origines (lore) de votre personnage, sans jamais bloquer la compréhension des autres joueurs.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-crimson/40 rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="px-2 py-0.5 rounded bg-codex-crimsonDim text-codex-crimson font-mono text-[10px] font-semibold uppercase">Tolérance Zéro</span>
+                                    <h3 class="font-display font-bold text-base text-codex-ink">Discriminations, Harcèlement & Doxxing</h3>
+                                </div>
+                                <span class="font-mono text-xs text-codex-crimson shrink-0">GEN-03</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Tout propos ou comportement à caractère <strong class="text-codex-ink font-medium">raciste, homophobe, sexiste, antisémite, transphobe, validiste</strong> ou incitant à la haine est formellement proscrit. Le harcèlement moral, le cyberharcèlement en messages privés, les menaces IRL ainsi que la divulgation d'informations personnelles (<strong class="text-codex-crimson font-medium">Doxxing / Leak</strong>) entraînent un <strong class="text-codex-crimson font-medium">bannissement permanent immédiat et irrévocable</strong>.
+                            </p>
+                        </article>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                                <div class="flex items-baseline justify-between gap-4 mb-2">
+                                    <h3 class="font-display font-bold text-base text-codex-ink">Séparation Stricte RP / HRP</h3>
+                                    <span class="font-mono text-xs text-codex-gold shrink-0">GEN-04</span>
+                                </div>
+                                <p class="text-sm text-codex-muted leading-relaxed">
+                                    Ce qui se déroule en Roleplay reste strictement en Roleplay. Il est interdit de transférer une rancœur RP sur Discord, d'insulter un joueur en HRP après une défaite ou de provoquer en MP. Le Fair-Play implique d'accepter de perdre une scène avec maturité.
+                                </p>
+                            </article>
+
+                            <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                                <div class="flex items-baseline justify-between gap-4 mb-2">
+                                    <h3 class="font-display font-bold text-base text-codex-ink">Interdiction du HRP Vocal & Abus de /me</h3>
+                                    <span class="font-mono text-xs text-codex-gold shrink-0">GEN-05</span>
+                                </div>
+                                <p class="text-sm text-codex-muted leading-relaxed">
+                                    Il est interdit de parler HRP en jeu (<em>« je bug »</em>, <em>« je clip »</em>, <em>« j'appelle un admin »</em>). Utilisez des formulations RP cohérentes et terminez toujours la scène avant d'ouvrir un ticket. L'usage abusif du <span class="font-mono text-xs text-codex-ink">/me</span> ou <span class="font-mono text-xs text-codex-ink">/ooc</span> est sanctionné.
+                                </p>
+                            </article>
+                        </div>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Respect de l'Équipe Staff & Interdiction de Publicité</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-06</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Les membres du Staff veillent au bon fonctionnement du serveur : tout manque de respect, mensonge délibéré en ticket ou tentative de manipulation d'un administrateur sera lourdement sanctionné. Toute publicité (directe ou déguisée en MP) pour un autre serveur FiveM ou Discord est passible d'un bannissement définitif.
+                            </p>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- ===================================================================== -->
+                <!-- CHAPITRE 02 : TRICHE, EXPLOITS, PACKS GRAPHIQUES & DÉCONNEXIONS       -->
+                <!-- ===================================================================== -->
+                <section id="chapitre-2" class="rule-section scroll-mt-24 space-y-5">
+                    <div class="flex items-baseline justify-between border-b border-codex-border pb-3">
+                        <div>
+                            <span class="font-mono text-xs text-codex-gold uppercase tracking-wider">Chapitre 02</span>
+                            <h2 class="font-display text-2xl font-bold text-codex-ink mt-0.5">Triche, Exploits, Packs Graphiques & Déconnexions</h2>
+                        </div>
+                        <span class="font-mono text-xs text-codex-subtle hidden sm:inline">GEN-07 — GEN-11</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-crimson/40 rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Logiciels Tiers, Cheats & Macros</h3>
+                                <span class="font-mono text-xs text-codex-crimson shrink-0">GEN-07</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                L'utilisation de tout logiciel de triche (<strong class="text-codex-ink font-medium">Mod Menu, Executor, Aimbot, Triggerbot, ESP/Wallhack, No-Recoil externe, macros de tir rapide ou d'auto-farm</strong>) ainsi que le fait de couvrir sciemment un tricheur entraîne un <strong class="text-codex-crimson font-medium">bannissement permanent global</strong> sans possibilité de déban.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Packs Graphiques, Citizen & Modifications Visuelles</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-08</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed mb-3">
+                                Les packs graphiques purement esthétiques (ex. : NVE, QuantV, Reshade léger) sont autorisés uniquement s'ils ne procurent <strong class="text-codex-ink font-medium">aucun avantage compétitif</strong>. Sont strictement interdits :
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
+                                <div class="px-3 py-2 rounded-lg bg-codex-bg border border-codex-border text-codex-muted flex items-center gap-2">
+                                    <span class="text-codex-crimson">×</span> Suppression de la nuit (No Night)
+                                </div>
+                                <div class="px-3 py-2 rounded-lg bg-codex-bg border border-codex-border text-codex-muted flex items-center gap-2">
+                                    <span class="text-codex-crimson">×</span> Suppression des buissons (No Bush / No Props)
+                                </div>
+                                <div class="px-3 py-2 rounded-lg bg-codex-bg border border-codex-border text-codex-muted flex items-center gap-2">
+                                    <span class="text-codex-crimson">×</span> Suppression des effets drogue / alcool / flash
+                                </div>
+                                <div class="px-3 py-2 rounded-lg bg-codex-bg border border-codex-border text-codex-muted flex items-center gap-2">
+                                    <span class="text-codex-crimson">×</span> Modification Hitboxes ou retrait du recul
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Use-Bug, Glitch & Exploitation de Failles</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-09</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Exploiter un bug ou une faille de mécanique de jeu (duplication d'argent ou d'objets, traverser des murs/portes, annuler une animation de soin ou de rechargement, abuser des roulades en fusillade, fouiller à travers un mur) est formellement interdit. Tout bug découvert doit être signalé immédiatement au Staff via ticket : le signalement honnête est récompensé, l'exploitation est punie par un Wipe / Ban.
+                            </p>
+                        </article>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                                <div class="flex items-baseline justify-between gap-4 mb-2">
+                                    <h3 class="font-display font-bold text-base text-codex-ink">Combat Logging (Déconnexion)</h3>
+                                    <span class="font-mono text-xs text-codex-gold shrink-0">GEN-10</span>
+                                </div>
+                                <p class="text-sm text-codex-muted leading-relaxed">
+                                    Interdiction de quitter le serveur (<span class="font-mono text-xs text-codex-ink">F8 quit</span> / <span class="font-mono text-xs text-codex-ink">Alt+F4</span>) pendant une action RP active ou dans les <strong class="text-codex-ink font-medium">15 minutes suivant la fin d'une scène majeure</strong> (poursuite, braquage, fusillade, coma, garde à vue).
+                                </p>
+                            </article>
+
+                            <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                                <div class="flex items-baseline justify-between gap-4 mb-2">
+                                    <h3 class="font-display font-bold text-base text-codex-ink">Protocole en Cas de Crash Jeu</h3>
+                                    <span class="font-mono text-xs text-codex-gold shrink-0">GEN-11</span>
+                                </div>
+                                <p class="text-sm text-codex-muted leading-relaxed">
+                                    En cas de crash FiveM durant une scène : <strong class="text-codex-ink font-medium">1)</strong> Postez immédiatement dans <span class="font-mono text-xs text-codex-gold">#crash-en-scène</span> avec votre nom RP, le lieu et une capture d'erreur ; <strong class="text-codex-ink font-medium">2)</strong> Reconnectez-vous sous <strong class="text-codex-ink font-medium">5 minutes</strong> pour reprendre la scène.
+                                </p>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ===================================================================== -->
+                <!-- CHAPITRE 03 : LEXIQUE DES 16 NOTIONS FONDAMENTALES RP                 -->
+                <!-- ===================================================================== -->
+                <section id="chapitre-3" class="rule-section scroll-mt-24 space-y-5">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b border-codex-border pb-3 gap-3">
+                        <div>
+                            <span class="font-mono text-xs text-codex-gold uppercase tracking-wider">Chapitre 03</span>
+                            <h2 class="font-display text-2xl font-bold text-codex-ink mt-0.5">Lexique des 16 Notions Fondamentales RP</h2>
+                        </div>
+
+                        <!-- Filtres Sobres -->
+                        <div class="flex flex-wrap gap-1.5" id="lexicon-filters">
+                            <button data-cat="all" class="lexicon-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-codex-gold text-codex-bg transition">
+                                Tout (16)
+                            </button>
+                            <button data-cat="immersion" class="lexicon-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-codex-surface border border-codex-border text-codex-muted hover:text-codex-ink transition">
+                                Immersion (5)
+                            </button>
+                            <button data-cat="fairplay" class="lexicon-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-codex-surface border border-codex-border text-codex-muted hover:text-codex-ink transition">
+                                Fair-Play (6)
+                            </button>
+                            <button data-cat="combat" class="lexicon-filter-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-codex-surface border border-codex-border text-codex-muted hover:text-codex-ink transition">
+                                Combat (5)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Grille des 16 notions RP (générée en JS) -->
+                    <div id="lexicon-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                        <!-- Rempli dynamiquement -->
+                    </div>
+                </section>
+
+                <!-- ===================================================================== -->
+                <!-- CHAPITRE 04 : PERSONNAGES, IDENTITÉ, COMA & MORT RP                   -->
+                <!-- ===================================================================== -->
+                <section id="chapitre-4" class="rule-section scroll-mt-24 space-y-5">
+                    <div class="flex items-baseline justify-between border-b border-codex-border pb-3">
+                        <div>
+                            <span class="font-mono text-xs text-codex-gold uppercase tracking-wider">Chapitre 04</span>
+                            <h2 class="font-display text-2xl font-bold text-codex-ink mt-0.5">Personnages, Identité, Coma & Mort RP</h2>
+                        </div>
+                        <span class="font-mono text-xs text-codex-subtle hidden sm:inline">GEN-12 — GEN-18</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Identité, Nom & Prénom Réalistes</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-12</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Votre personnage doit posséder un nom et un prénom crédibles. Sont interdits : les noms de célébrités réelles, les personnages de fiction connus (<em>Tommy Vercetti, John Wick, Pablo Escobar</em>), les jeux de mots ridicules ainsi que les caractères spéciaux ou chiffres.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Cohérence Vestimentaire & Apparence</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-13</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Votre tenue doit être adaptée au contexte RP. Les tenues moddées avec parties du corps invisibles, le port permanent du gilet pare-balles apparent ou d'un casque militaire en civil sans scène armée, ainsi que les uniformes publics sans fonction légitime sont interdits.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5 md:col-span-2">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Règles du Multi-Personnages (Double Perso)</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-14</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Vos personnages doivent vivre des vies <strong class="text-codex-ink font-medium">100 % indépendantes</strong>. Il est formellement interdit de transférer de l'argent, des véhicules, des armes, des biens ou des informations d'un personnage à l'autre (même via un ami intermédiaire). De plus, il est <strong class="text-codex-crimson font-medium">strictement interdit</strong> d'avoir un personnage dans les forces de l'ordre / DOJ / Secret Service et un second dans un groupe criminel.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Comportement dans le Coma</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-15</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Lorsqu'il est inconscient, votre personnage n'a <strong class="text-codex-ink font-medium">aucun droit de parler</strong>, de crier, d'insulter, de donner des indications de position à ses alliés ou d'utiliser sa radio / son téléphone. Seuls de légers gémissements de douleur sont tolérés.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">NLR — Réanimation SAMS vs Unité X</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-16</span>
+                            </div>
+                            <ul class="text-sm text-codex-muted space-y-1.5 leading-relaxed">
+                                <li><strong class="text-codex-sage font-medium">• Réanimé par le SAMS :</strong> Vous gardez vos souvenirs de la scène, <em>à l'exception</em> des circonstances exactes de votre chute et de l'identité d'un tireur vous ayant abattu de dos / par surprise.</li>
+                                <li><strong class="text-codex-gold font-medium">• Unité X / Hôpital :</strong> Amnésie totale de la scène + interdiction de revenir sur la zone pendant <strong class="text-codex-ink font-medium">30 minutes</strong>.</li>
+                            </ul>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Mort RP (Wipe Définitif sur Dossier)</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-17</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                La Mort RP entraîne la suppression définitive du personnage (inventaire, comptes bancaires, véhicules, relations). Elle ne peut jamais être imposée sans un <strong class="text-codex-ink font-medium">dossier complet et validé au préalable par le Staff</strong> reposant sur des motifs RP majeurs.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Mort RP Volontaire & Nouveau Départ</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-18</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Un joueur peut décider volontairement de la Mort RP de son propre personnage au terme d'une scène cohérente (avec validation Staff). Votre nouveau personnage ne doit avoir aucun lien familial ou financier avec l'ancien ni chercher à le venger.
+                            </p>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- ===================================================================== -->
+                <!-- CHAPITRE 05 : CONDUITE, VÉHICULES & CIRCULATION                       -->
+                <!-- ===================================================================== -->
+                <section id="chapitre-5" class="rule-section scroll-mt-24 space-y-5">
+                    <div class="flex items-baseline justify-between border-b border-codex-border pb-3">
+                        <div>
+                            <span class="font-mono text-xs text-codex-gold uppercase tracking-wider">Chapitre 05</span>
+                            <h2 class="font-display text-2xl font-bold text-codex-ink mt-0.5">Conduite, Véhicules & Circulation</h2>
+                        </div>
+                        <span class="font-mono text-xs text-codex-subtle hidden sm:inline">GEN-19 — GEN-24</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Cohérence Tout-Terrain (Off-Road)</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-19</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Adaptez votre conduite à la garde au sol du véhicule. Il est <strong class="text-codex-crimson font-medium">strictement interdit</strong> aux supercars, hypercars, sportives et berlines basses de gravir des montagnes ou traverser des terrains accidentés. Seuls les <strong class="text-codex-ink font-medium">4x4, SUV tout-terrain, quads et motos cross</strong> sont autorisés en off-road.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Sauts & Cascades Irréalistes</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-20</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Toute cascade irréaliste (utiliser des rochers comme tremplins, sauter d'un pont d'autoroute vers la ville, dévaler une falaise verticale pour fuir la police) est assimilée à du <strong class="text-codex-ink font-medium">PowerGaming</strong> et sanctionnée.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Circulation en Zone Urbaine</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-21</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                En ville (et particulièrement aux abords de l'hôpital, des commissariats et de la Place Cube), adoptez une conduite cohérente. Rouler à 250 km/h en plein centre-ville sans motif RP majeur est interdit.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Dégâts Mécaniques & Pneus Crevés</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-22</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Un véhicule ayant subi un tonneau complet, un choc frontal violent ou ayant <strong class="text-codex-gold font-medium">2 pneus crevés ou plus</strong> est considéré comme hors d'usage. Vous devez jouer votre Pain RP et stopper le véhicule.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Vol & Destruction Gratuite de Véhicules</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-23</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Il est interdit de voler un véhicule de service public (<strong class="text-codex-ink font-medium">LSPD, BCSO, SAMS, Gouvernement</strong>) sans une scène RP majeure justifiée, ou de jeter volontairement le véhicule d'un joueur à l'eau.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Hélicoptères & Aviation</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-24</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Le pilotage d'un aéronef nécessite une cohérence RP. Il est interdit de poser un hélicoptère en pleine avenue urbaine ou sur des toits non équipés d'héliport, sauf évacuation sanitaire urgente du SAMS.
+                            </p>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- ===================================================================== -->
+                <!-- CHAPITRE 06 : ZONES SÛRES (SAFE ZONES) & LIEUX PROTÉGÉS               -->
+                <!-- ===================================================================== -->
+                <section id="chapitre-6" class="rule-section scroll-mt-24 space-y-5">
+                    <div class="flex items-baseline justify-between border-b border-codex-border pb-3">
+                        <div>
+                            <span class="font-mono text-xs text-codex-gold uppercase tracking-wider">Chapitre 06</span>
+                            <h2 class="font-display text-2xl font-bold text-codex-ink mt-0.5">Zones Sûres (Safe Zones) & Lieux Protégés</h2>
+                        </div>
+                        <span class="font-mono text-xs text-codex-subtle hidden sm:inline">GEN-25 — GEN-28</span>
+                    </div>
+
+                    <!-- Tableau sobre des Safe Zones -->
+                    <article class="searchable-card bg-codex-surface border border-codex-border rounded-xl overflow-hidden">
+                        <div class="px-5 py-3.5 border-b border-codex-border flex items-center justify-between bg-codex-elevated/50">
+                            <h3 class="font-display font-bold text-sm text-codex-ink">Périmètres Officiels Protégés</h3>
+                            <span class="font-mono text-xs text-codex-gold">GEN-25</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-codex-border text-sm">
+                            <div class="p-4 space-y-2.5">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-codex-ink font-medium">Hôpitaux (SAMS)</span>
+                                    <span class="font-mono text-[11px] text-codex-sage">Intérieur + Parking</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-codex-ink font-medium">Commissariats</span>
+                                    <span class="font-mono text-[11px] text-codex-sage">LSPD & BCSO</span>
+                                </div>
+                            </div>
+                            <div class="p-4 space-y-2.5">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-codex-ink font-medium">Tribunal & DOJ</span>
+                                    <span class="font-mono text-[11px] text-codex-sage">Bâtiments officiels</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-codex-ink font-medium">Concessionnaires</span>
+                                    <span class="font-mono text-[11px] text-codex-sage">Showrooms & cours</span>
+                                </div>
+                            </div>
+                            <div class="p-4 space-y-2.5">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-codex-ink font-medium">Banques</span>
+                                    <span class="font-mono text-[11px] text-codex-muted">Hors braquage validé</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-codex-ink font-medium">Zones Spawn & Place Cube</span>
+                                    <span class="font-mono text-[11px] text-codex-sage">Parking Central</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Interdictions Absolues</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-26</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Dans toute Safe Zone, il est formellement interdit de commettre un braquage, un enlèvement, une fusillade, un vol de véhicule, une fouille forcée, un racket ou une bagarre gratuite.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-crimson/35 rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Anti-Refuge (Abuse)</h3>
+                                <span class="font-mono text-xs text-codex-crimson shrink-0">GEN-27</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Il est strictement interdit de se réfugier volontairement dans une Safe Zone pour échapper à une poursuite, un braquage ou une action criminelle déjà engagée à l'extérieur.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Travailleurs en Service</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-28</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Les citoyens effectuant leurs métiers d'intérim (éboueur, mineur, bûcheron, livreur) ne doivent pas être braqués gratuitement ni entravés sans scène RP construite.
+                            </p>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- ===================================================================== -->
+                <!-- CHAPITRE 07 : SCÈNES SENSIBLES, ÉCONOMIE CIVILE & INTERACTIONS        -->
+                <!-- ===================================================================== -->
+                <section id="chapitre-7" class="rule-section scroll-mt-24 space-y-5">
+                    <div class="flex items-baseline justify-between border-b border-codex-border pb-3">
+                        <div>
+                            <span class="font-mono text-xs text-codex-gold uppercase tracking-wider">Chapitre 07</span>
+                            <h2 class="font-display text-2xl font-bold text-codex-ink mt-0.5">Scènes Sensibles, Économie Civile & Interactions</h2>
+                        </div>
+                        <span class="font-mono text-xs text-codex-subtle hidden sm:inline">GEN-29 — GEN-35</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-crimson/40 rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Interdiction de RP Sexuel Non Consenti</h3>
+                                <span class="font-mono text-xs text-codex-crimson shrink-0">GEN-29</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Tout Roleplay à caractère sexuel non consenti (<strong class="text-codex-ink font-medium">viol, agression sexuelle, harcèlement sexuel</strong>) est formellement interdit sur Weaves FA et sanctionné par un <strong class="text-codex-crimson font-medium">bannissement définitif immédiat</strong>. Les scènes intimes consenties ne doivent jamais se dérouler dans un lieu public.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Torture, Humiliation & Mutilations</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-30</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Les scènes de torture doivent rester mesurées, justifiées par un conflit RP majeur et respecter la sensibilité des joueurs (possibilité d'écourter via un <span class="font-mono text-xs text-codex-ink">/me</span> si un joueur est mal à l'aise). Aucune mutilation permanente ne peut être imposée sans accord explicite du joueur et du Staff.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Arnaques & Transactions Immobilières</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-31</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Il est strictement interdit d'arnaquer un joueur lors d'une vente immobilière (<strong class="text-codex-ink font-medium">Dynasty 8</strong>), d'une cession d'entreprise ou d'un contrat officiel encadré par le système du serveur.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Extorsion Bancaire (ATM) & Véhicules</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-32</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Il est interdit de contraindre un joueur sous la menace d'une arme à retirer de l'argent au distributeur (<strong class="text-codex-ink font-medium">ATM</strong>), à effectuer un virement bancaire ou à céder les clés/papiers de son véhicule personnel.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Fouille & Dépouillement d'un Joueur</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-33</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                La fouille d'un individu nécessite une <strong class="text-codex-ink font-medium">raison RP valable et cohérente</strong>. Il est interdit de dépouiller gratuitement un citoyen de sa nourriture, de son téléphone ou de ses outils de travail sans scène légitime.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Prises d'Otages & Faux Otages</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-34</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Il est formellement interdit d'utiliser un membre de son propre groupe ou un ami complice comme <strong class="text-codex-crimson font-medium">« faux otage »</strong>, ainsi que de prendre en otage la même personne en boucle.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5 md:col-span-2">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Cohérence Économique (Semi-Réaliste)</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-35</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                L'économie de Weaves FA est calibrée sur un modèle <strong class="text-codex-ink font-medium">semi-réaliste</strong>. Tout don d'argent massif injustifié entre joueurs, blanchiment sauvage hors cadre légal/illégal ou manipulation artificielle des prix est interdit et fera l'objet d'une enquête économique par le Staff.
+                            </p>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- ===================================================================== -->
+                <!-- CHAPITRE 08 : STREAMING, DISCORD EXTERNE & GESTION DES TICKETS        -->
+                <!-- ===================================================================== -->
+                <section id="chapitre-8" class="rule-section scroll-mt-24 space-y-5">
+                    <div class="flex items-baseline justify-between border-b border-codex-border pb-3">
+                        <div>
+                            <span class="font-mono text-xs text-codex-gold uppercase tracking-wider">Chapitre 08</span>
+                            <h2 class="font-display text-2xl font-bold text-codex-ink mt-0.5">Streaming, Discord Externe & Gestion des Tickets</h2>
+                        </div>
+                        <span class="font-mono text-xs text-codex-subtle hidden sm:inline">GEN-36 — GEN-40</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Créateurs de Contenu (Twitch / Kick / YT)</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-36</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Les streamers sont les bienvenus sur Weaves FA mais restent soumis à l'intégralité du règlement sans passe-droit. Vous êtes responsable de la modération de votre tchat : tout encouragement au <strong class="text-codex-ink font-medium">MetaGaming</strong> ou au harcèlement en direct sera sanctionné.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Protection des Infos Sensibles en Live</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-37</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Lors d'un stream en direct, masquez ou évitez de divulguer à l'écran les <strong class="text-codex-ink font-medium">fréquences radio secrètes, codes d'accès ou emplacements cachés</strong> afin d'éviter toute exploitation externe.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-crimson/35 rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Communications Vocales Externes</h3>
+                                <span class="font-mono text-xs text-codex-crimson shrink-0">GEN-38</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Il est <strong class="text-codex-crimson font-medium">strictement interdit</strong> d'être en appel vocal externe (Discord, TeamSpeak, téléphone) pour échanger des informations liées au jeu pendant que vous êtes connecté sur FiveM. Toutes les communications à distance passent par la <strong class="text-codex-ink font-medium">radio ou le téléphone en jeu</strong>.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Fin de Scène Avant Tout Ticket</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-39</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                En cas de litige constaté pendant une action, <strong class="text-codex-ink font-medium">n'interrompez jamais la scène</strong>. Jouez la scène jusqu'à son terme, puis ouvrez un ticket sur le Discord officiel une fois l'action terminée.
+                            </p>
+                        </article>
+
+                        <article class="searchable-card article-row bg-codex-surface border border-codex-gold/35 rounded-xl p-5 md:col-span-2">
+                            <div class="flex items-baseline justify-between gap-4 mb-2">
+                                <h3 class="font-display font-bold text-base text-codex-ink">Preuve Vidéo Obligatoire (REC / Clip)</h3>
+                                <span class="font-mono text-xs text-codex-gold shrink-0">GEN-40</span>
+                            </div>
+                            <p class="text-sm text-codex-muted leading-relaxed">
+                                Pour toute plainte joueur, contestation de scène ou demande de remboursement suite à un bug/freekill, un <strong class="text-codex-ink font-medium">enregistrement vidéo clair (OBS, Medal, Nvidia ShadowPlay) de 2 à 5 minutes avec le son (voix du joueur incluse)</strong> est obligatoire. Sans preuve vidéo exploitable, aucun remboursement ni sanction rétroactive ne pourra être appliqué.
+                            </p>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- ===================================================================== -->
+                <!-- CHAPITRE 09 : ÉCHELLE DES SANCTIONS & BARÈME INTERACTIF               -->
+                <!-- ===================================================================== -->
+                <section id="chapitre-9" class="rule-section scroll-mt-24 space-y-6">
+                    <div class="flex items-baseline justify-between border-b border-codex-border pb-3">
+                        <div>
+                            <span class="font-mono text-xs text-codex-gold uppercase tracking-wider">Chapitre 09</span>
+                            <h2 class="font-display text-2xl font-bold text-codex-ink mt-0.5">Échelle des Sanctions & Barème Interactif</h2>
+                        </div>
+                        <span class="font-mono text-xs text-codex-subtle hidden sm:inline">GEN-41 — GEN-45</span>
+                    </div>
+
+                    <!-- Tableau Typographique des 5 Niveaux -->
+                    <div class="bg-codex-surface border border-codex-border rounded-xl divide-y divide-codex-border overflow-hidden">
+                        <div class="searchable-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="font-mono text-xs text-codex-gold">GEN-41</span>
+                                    <h3 class="font-display font-bold text-base text-codex-ink">Niveau 1 — Rappel à l'Ordre Oral / Écrit</h3>
+                                </div>
+                                <p class="text-sm text-codex-muted">Avertissement préventif adressé par un modérateur pour une maladresse légère sans conséquence grave sur la scène d'autrui.</p>
+                            </div>
+                            <span class="font-mono text-xs px-2.5 py-1 rounded bg-codex-elevated border border-codex-border text-codex-muted shrink-0 self-start sm:self-center">Préventif</span>
+                        </div>
+
+                        <div class="searchable-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="font-mono text-xs text-codex-gold">GEN-42</span>
+                                    <h3 class="font-display font-bold text-base text-codex-ink">Niveau 2 — Avertissement (Warn 1 & Warn 2)</h3>
+                                </div>
+                                <p class="text-sm text-codex-muted">Inscrit au dossier administratif pour faute avérée (No Pain, conduite incohérente, HRP vocal léger). Actif durant <strong class="text-codex-ink font-medium">30 jours</strong> sans récidive.</p>
+                            </div>
+                            <span class="font-mono text-xs px-2.5 py-1 rounded bg-codex-goldDim border border-codex-gold/30 text-codex-gold shrink-0 self-start sm:self-center">30 Jours</span>
+                        </div>
+
+                        <div class="searchable-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="font-mono text-xs text-codex-gold">GEN-43</span>
+                                    <h3 class="font-display font-bold text-base text-codex-ink">Niveau 3 — Bannissement Temporaire</h3>
+                                </div>
+                                <p class="text-sm text-codex-muted">Appliqué automatiquement au cumul de <strong class="text-codex-ink font-medium">3 Warns</strong> ou directement en cas de faute grave (Combat Logging, MetaGaming, PowerGaming abusif, FreeKill).</p>
+                            </div>
+                            <span class="font-mono text-xs px-2.5 py-1 rounded bg-codex-goldDim border border-codex-gold/30 text-codex-gold shrink-0 self-start sm:self-center">24h à 7 Jours</span>
+                        </div>
+
+                        <div class="searchable-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="font-mono text-xs text-codex-gold">GEN-44</span>
+                                    <h3 class="font-display font-bold text-base text-codex-ink">Niveau 4 — Wipe Complet (Personnage ou Compte)</h3>
+                                </div>
+                                <p class="text-sm text-codex-muted">Réinitialisation totale des biens, de l'argent et de l'inventaire en cas de duplication, exploitation de bug économique ou transfert multi-perso.</p>
+                            </div>
+                            <span class="font-mono text-xs px-2.5 py-1 rounded bg-codex-elevated border border-codex-border text-codex-ink shrink-0 self-start sm:self-center">Reset Biens</span>
+                        </div>
+
+                        <div class="searchable-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-codex-crimsonDim/30">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="font-mono text-xs text-codex-crimson">GEN-45</span>
+                                    <h3 class="font-display font-bold text-base text-codex-ink">Niveau 5 — Bannissement Définitif (Permaban)</h3>
+                                </div>
+                                <p class="text-sm text-codex-muted">Exclusion permanente de Weaves FA (FiveM & Discord) pour <strong class="text-codex-ink font-medium">Cheat / Mod Menu</strong>, propos haineux, RP sexuel non consenti, harcèlement HRP, doxxing ou publicité.</p>
+                            </div>
+                            <span class="font-mono text-xs px-2.5 py-1 rounded bg-codex-crimsonDim border border-codex-crimson/40 text-codex-crimson shrink-0 self-start sm:self-center">Permanent</span>
+                        </div>
+                    </div>
+
+                    <!-- Simulateur & Barème Interactif Sobre -->
+                    <div class="bg-codex-surface border border-codex-border rounded-xl p-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 mb-5 border-b border-codex-border">
+                            <div>
+                                <span class="font-mono text-[11px] uppercase tracking-wider text-codex-gold">Outil de Consultation</span>
+                                <h3 class="font-display font-bold text-lg text-codex-ink mt-0.5">Vérificateur d'Infraction & Réflexe RP</h3>
+                            </div>
+                            <span class="font-mono text-xs text-codex-subtle">Barème officiel Staff</span>
+                        </div>
+
+                        <div class="mb-5">
+                            <label for="sanction-select" class="block font-mono text-xs text-codex-muted uppercase tracking-wider mb-2">Sélectionner un cas de figure :</label>
+                            <select id="sanction-select" class="w-full bg-codex-bg border border-codex-border focus:border-codex-gold rounded-lg px-4 py-2.5 text-sm text-codex-ink focus:outline-none transition">
+                                <option value="combatlog">Déconnexion en pleine poursuite / garde à vue (Combat Logging)</option>
+                                <option value="nopain">Accident violent à 200 km/h sans jouer la douleur (No Pain RP)</option>
+                                <option value="metagaming">Utilisation d'infos entendues sur Discord ou un stream (MetaGaming)</option>
+                                <option value="safezone">Fuite dans l'hôpital ou commissariat pendant une poursuite (Safe Zone Abuse)</option>
+                                <option value="offroad">Gravir le Mont Chiliad avec une Supercar (Off-Road abusif)</option>
+                                <option value="freekill">Tirer sur un joueur sans aucune interaction RP préalable (FreeKill)</option>
+                                <option value="multiperson">Transfert d'argent ou d'armes entre deux personnages (Multi-Perso)</option>
+                                <option value="cheat">Utilisation d'un Mod Menu, Macro ou Pack No-Night / No-Bush (Triche)</option>
+                            </select>
+                        </div>
+
+                        <div id="sanction-result-box" class="bg-codex-bg border border-codex-border rounded-xl p-5 space-y-4">
+                            <!-- Rempli dynamiquement en JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Pied de Page Éditorial -->
+                <footer class="border-t border-codex-border pt-8 pb-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-codex-subtle">
+                    <div>WEAVES FA — CODEX OFFICIEL DU RÈGLEMENT GÉNÉRAL</div>
+                    <div>ARTICLES GEN-01 À GEN-45 • ÉCONOMIE SEMI-RÉALISTE</div>
+                </footer>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // 1. DONNÉES DU LEXIQUE DES 16 NOTIONS FONDAMENTALES RP
+        // =========================================================================
+        const lexiconData = [
+            {
+                term: "Pain RP",
+                subtitle: "Jeu de la douleur physique",
+                cat: "immersion",
+                catLabel: "Immersion",
+                desc: "Obligation de simuler réalistement les blessures, chocs et traumatismes subis par votre personnage (accident de voiture, chute, coups, impacts de balles).",
+                good: "Rester sonné dans l'habitacle après un choc violent, boiter après une balle dans la jambe et consulter un médecin.",
+                bad: "Faire trois tonneaux à 180 km/h et sortir du véhicule en courant immédiatement pour tirer."
+            },
+            {
+                term: "Fear RP",
+                subtitle: "Valorisation de la vie face au danger",
+                cat: "immersion",
+                catLabel: "Immersion",
+                desc: "Vous devez craindre la mort et les blessures graves comme dans la réalité. Si vous êtes braqué à bout portant alors que vous êtes désarmé ou en infériorité manifeste, vous devez coopérer.",
+                good: "Lever les mains et obtempérer lorsque deux hommes armés vous tiennent en joue.",
+                bad: "Sortir son arme de son sac alors qu'un canon est déjà braqué sur votre tempe."
+            },
+            {
+                term: "Mass RP",
+                subtitle: "Simulation de population et caméras",
+                cat: "immersion",
+                catLabel: "Immersion",
+                desc: "Los Santos et Blaine County comptent des millions d'habitants. Vous devez tenir compte de la présence fictive de civils, témoins et caméras dans les lieux publics et institutionnels.",
+                good: "Préparer un coup discrètement en évitant les zones surpeuplées (commissariats, hôpitaux).",
+                bad: "Entrer armé dans le hall du commissariat central en pensant qu'il n'y a que 3 policiers connectés."
+            },
+            {
+                term: "MetaGaming",
+                subtitle: "Utilisation d'informations hors jeu",
+                cat: "fairplay",
+                catLabel: "Fair-Play",
+                desc: "Interdiction stricte d'utiliser en jeu des informations obtenues via Discord, un live Twitch/Kick, un message privé ou le nom affiché au-dessus d'un joueur.",
+                good: "Apprendre l'identité d'un suspect uniquement par enquête, carte d'identité ou témoignage en jeu.",
+                bad: "Reconnaître un joueur masqué uniquement grâce à sa voix ou à une info lue sur Discord."
+            },
+            {
+                term: "PowerGaming",
+                subtitle: "Actions irréalisables ou forcées",
+                cat: "fairplay",
+                catLabel: "Fair-Play",
+                desc: "Réaliser des actes physiquement impossibles dans la vraie vie ou imposer une action à un joueur sans lui laisser aucune possibilité de réagir.",
+                good: "Utiliser un /me détaillé pour attacher un otage en lui laissant le temps de répondre.",
+                bad: "Parler dans le coma, escalader une montagne en supercar ou fouiller quelqu'un en courant."
+            },
+            {
+                term: "StreamHack / StreamSniping",
+                subtitle: "Exploitation d'un live en cours",
+                cat: "fairplay",
+                catLabel: "Fair-Play",
+                desc: "Regarder la diffusion en direct (Twitch, Kick, YouTube) d'un joueur connecté sur le serveur pour connaître sa position, ses préparatifs ou ses effectifs.",
+                good: "Couper tous les streams des joueurs du serveur dès que vous lancez FiveM.",
+                bad: "Rejoindre un point de deal ou tendre une embuscade après avoir vu la position sur un live."
+            },
+            {
+                term: "FreeKill / FreePunch (RDM)",
+                subtitle: "Violence gratuite sans motif RP",
+                cat: "combat",
+                catLabel: "Combat",
+                desc: "Tuer, tirer sur ou frapper un joueur sans aucune raison RP valable et sans interaction préalable construite.",
+                good: "Engager un dialogue, poser des sommations claires et laisser une issue avant d'ouvrir le feu.",
+                bad: "Abattre un passant au hasard ou frapper un joueur sur la Place Cube sans raison."
+            },
+            {
+                term: "CarKill (VDM)",
+                subtitle: "Utilisation d'un véhicule comme arme",
+                cat: "combat",
+                catLabel: "Combat",
+                desc: "Percuter ou écraser volontairement un piéton avec un véhicule. Toléré uniquement en cas de légitime défense extrême si votre véhicule est encerclé sous les tirs sans autre issue de fuite.",
+                good: "Contourner les piétons et freiner lors d'une fuite en véhicule.",
+                bad: "Foncer volontairement dans un groupe de joueurs sur un trottoir pour les mettre au sol."
+            },
+            {
+                term: "Revenge Kill",
+                subtitle: "Vengeance illégitime après un coma",
+                cat: "combat",
+                catLabel: "Combat",
+                desc: "Retourner sur le lieu d'une fusillade après une réanimation à l'hôpital pour se venger ou utiliser les informations liées à sa propre mise au sol.",
+                good: "Respecter le NLR (30 min hors zone après Unité X) et reprendre le cours normal de sa vie RP.",
+                bad: "Sortir de l'hôpital, récupérer une arme au coffre et revenir immédiatement abattre ses agresseurs."
+            },
+            {
+                term: "Force RP",
+                subtitle: "Imposer une scène sans issue",
+                cat: "fairplay",
+                catLabel: "Fair-Play",
+                desc: "Forcer un autre joueur à subir une action irréversible ou lui imposer le déroulé d'une scène sans respecter son libre arbitre ni les règles du serveur.",
+                good: "Proposer des choix cohérents lors d'une négociation ou d'un interrogatoire.",
+                bad: "Forcer un joueur sous la menace à signer la vente de sa maison ou vider son compte bancaire."
+            },
+            {
+                term: "Win RP",
+                subtitle: "Vouloir gagner à tout prix",
+                cat: "fairplay",
+                catLabel: "Fair-Play",
+                desc: "Privilégier la victoire personnelle ou matérielle au détriment du réalisme, de la cohérence et du plaisir de jeu des autres participants.",
+                good: "Accepter de se faire arrêter ou braquer lorsque la situation est logiquement perdue.",
+                bad: "Tenter une fuite impossible à 1 contre 8 policiers armés uniquement pour éviter une amende."
+            },
+            {
+                term: "CopBait",
+                subtitle: "Provocation gratuite des forces de l'ordre",
+                cat: "immersion",
+                catLabel: "Immersion",
+                desc: "Provoquer volontairement et sans raison RP la LSPD ou le BCSO dans l'unique but de déclencher une course-poursuite ou une fusillade.",
+                good: "Rester discret devant les forces de l'ordre lorsque vous transportez de la marchandise illégale.",
+                bad: "Faire des burnouts et insulter des agents devant le commissariat pour s'amuser."
+            },
+            {
+                term: "No Fear Police / Mort",
+                subtitle: "Mépris de l'autorité et du danger",
+                cat: "immersion",
+                catLabel: "Immersion",
+                desc: "Ne montrer aucune crainte face aux forces de l'ordre armées, aux peines de prison ou face à une situation mortelle.",
+                good: "Adopter une attitude prudente et réaliste lors d'un contrôle routier ou d'une arrestation.",
+                bad: "Narguer des agents du SWAT pointant des fusils d'assaut sur vous."
+            },
+            {
+                term: "Mix RP",
+                subtitle: "Mélange entre plusieurs personnages",
+                cat: "fairplay",
+                catLabel: "Fair-Play",
+                desc: "Confondre ou croiser les connaissances, relations, biens ou objectifs de vos différents personnages sur le serveur.",
+                good: "Garder chaque personnage totalement hermétique (aucun contact, aucun transfert).",
+                bad: "Utiliser son personnage civil pour donner des informations à son personnage criminel."
+            },
+            {
+                term: "Bunny Hop / Chicken Run",
+                subtitle: "Déplacements irréalistes en combat",
+                cat: "combat",
+                catLabel: "Combat",
+                desc: "Sauter en boucle pour courir plus vite (Bunny Hop) ou courir en zigzags frénétiques (Chicken Run) pour esquiver les balles au lieu de se mettre à couvert.",
+                good: "Utiliser les murets, véhicules et bâtiments pour se mettre à couvert tactiquement.",
+                bad: "Sauter sans arrêt en plein milieu d'une rue sous les tirs pour éviter d'être touché."
+            },
+            {
+                term: "Trash Corps / Loot Abusif",
+                subtitle: "Acharnement sur un joueur au sol",
+                cat: "combat",
+                catLabel: "Combat",
+                desc: "Insulter gratuitement, humilier ou dépouiller sans raison RP majeure un joueur inconscient dans le coma.",
+                good: "Quitter rapidement la zone après une fusillade ou alerter les secours de manière anonyme.",
+                bad: "Danser sur un joueur dans le coma en l'insultant ou lui voler son téléphone et sa nourriture."
+            }
+        ];
+
+        const lexiconGrid = document.getElementById('lexicon-grid');
+
+        function renderLexicon(filter = 'all') {
+            const list = filter === 'all' ? lexiconData : lexiconData.filter(item => item.cat === filter);
+            lexiconGrid.innerHTML = list.map(item => `
+                <article class="searchable-card article-row bg-codex-surface border border-codex-border rounded-xl p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-start justify-between gap-2 mb-2">
+                            <div>
+                                <h3 class="font-display font-bold text-base text-codex-ink">${item.term}</h3>
+                                <span class="text-xs text-codex-subtle">${item.subtitle}</span>
+                            </div>
+                            <span class="px-2 py-0.5 rounded bg-codex-elevated border border-codex-border font-mono text-[11px] text-codex-muted shrink-0">
+                                ${item.catLabel}
+                            </span>
+                        </div>
+                        <p class="text-sm text-codex-muted leading-relaxed mb-4">${item.desc}</p>
+                    </div>
+                    <div class="space-y-2 text-xs pt-3 border-t border-codex-border">
+                        <div class="p-2.5 rounded-lg bg-codex-sageDim border border-codex-sage/25 text-gray-200">
+                            <span class="font-mono text-[11px] text-codex-sage font-semibold uppercase block mb-0.5">Autorisé</span>
+                            ${item.good}
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-codex-crimsonDim border border-codex-crimson/25 text-gray-200">
+                            <span class="font-mono text-[11px] text-codex-crimson font-semibold uppercase block mb-0.5">Interdit</span>
+                            ${item.bad}
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        document.querySelectorAll('.lexicon-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lexicon-filter-btn').forEach(b => {
+                    b.classList.remove('bg-codex-gold', 'text-codex-bg');
+                    b.classList.add('bg-codex-surface', 'border', 'border-codex-border', 'text-codex-muted');
+                });
+                btn.classList.remove('bg-codex-surface', 'border', 'border-codex-border', 'text-codex-muted');
+                btn.classList.add('bg-codex-gold', 'text-codex-bg');
+                renderLexicon(btn.dataset.cat);
+            });
+        });
+        renderLexicon('all');
+
+        // =========================================================================
+        // 2. SIMULATEUR & BARÈME INTERACTIF DES SANCTIONS
+        // =========================================================================
+        const sanctionsDB = {
+            combatlog: {
+                title: "Combat Logging (Déconnexion volontaire en scène)",
+                article: "GEN-10 & GEN-11",
+                level: "Niveau 3 • Ban Temporaire (3 à 7j) + Saisie",
+                badgeStyle: "bg-codex-goldDim border-codex-gold/40 text-codex-gold",
+                explanation: "Quitter le serveur pendant une arrestation, une poursuite, une fusillade ou dans le coma prive les autres joueurs de la fin de la scène et empêche les saisies légales.",
+                reflex: "Toujours jouer la scène jusqu'au bout (garde à vue, soins SAMS). En cas de crash réel, poster immédiatement une preuve dans #crash-en-scène et se reconnecter sous 5 minutes."
+            },
+            nopain: {
+                title: "No Pain RP (Absence de jeu de la douleur)",
+                article: "Chapitre 03 & GEN-22",
+                level: "Niveau 2 • Warn 1 / Warn 2 (Ban 24h-72h si récidive)",
+                badgeStyle: "bg-codex-goldDim border-codex-gold/40 text-codex-gold",
+                explanation: "Ignorer un choc frontal à haute vitesse, un tonneau ou des impacts de balles pour continuer à courir ou conduire fausse totalement l'équilibre des scènes.",
+                reflex: "Marquer un temps d'arrêt après tout choc violent, simuler l'étourdissement ou les blessures à la voix/au /me et abandonner un véhicule ayant subi un tonneau ou 2 pneus crevés."
+            },
+            metagaming: {
+                title: "MetaGaming & Communications Externes (Discord / Stream)",
+                article: "Chapitre 03 & GEN-38",
+                level: "Niveau 3 • Ban Temporaire (3 à 7j) / Permaban",
+                badgeStyle: "bg-codex-goldDim border-codex-gold/40 text-codex-gold",
+                explanation: "Utiliser des informations obtenues hors jeu (appel Discord en session, stream d'un autre joueur, lecture du nom au-dessus de la tête) détruit l'effet de surprise et les enquêtes RP.",
+                reflex: "Couper tous les vocaux Discord et lives externes en jouant. Utiliser uniquement la radio et le téléphone en jeu."
+            },
+            safezone: {
+                title: "No Safe Zone Abuse (Fuite en Zone Sûre)",
+                article: "GEN-25, GEN-26 & GEN-27",
+                level: "Niveau 2 à 3 • Warn 2 ou Ban (24h à 72h)",
+                badgeStyle: "bg-codex-goldDim border-codex-gold/40 text-codex-gold",
+                explanation: "Les Safe Zones (Hôpitaux, Commissariats, Place Cube, Concessionnaires) protègent les joueurs hors action, mais ne doivent jamais servir de bouclier pour fuir une poursuite engagée à l'extérieur.",
+                reflex: "Poursuivre sa fuite sur la route ou dans des zones neutres sans jamais entrer dans un périmètre protégé pour stopper l'action."
+            },
+            offroad: {
+                title: "Conduite Off-Road Abusive & Cascades Irréalistes",
+                article: "GEN-19 & GEN-20",
+                level: "Niveau 2 • Warn 1 (Warn 2 si fuite gagnée grâce au bug)",
+                badgeStyle: "bg-codex-goldDim border-codex-gold/40 text-codex-gold",
+                explanation: "Gravir des montagnes escarpées ou sauter d'un pont avec une supercar ou une berline basse constitue du PowerGaming.",
+                reflex: "Rester sur le bitume avec les véhicules sportifs/citadins et réserver les chemins de terre et reliefs aux 4x4, SUV adaptés et motos cross."
+            },
+            freekill: {
+                title: "FreeKill / FreePunch (Meurtre ou agression sans motif RP)",
+                article: "Chapitre 03 & GEN-40",
+                level: "Niveau 3 • Ban Temporaire (3 à 7j) + Remboursement REC",
+                badgeStyle: "bg-codex-goldDim border-codex-gold/40 text-codex-gold",
+                explanation: "Abattre ou frapper un joueur sans dialogue, sans sommation ni historique RP valable ruine l'expérience des citoyens.",
+                reflex: "Toujours privilégier l'interaction verbale, la menace RP et la négociation avant d'employer la force."
+            },
+            multiperson: {
+                title: "Mix RP & Transfert entre Personnages (Multi-Perso)",
+                article: "GEN-14 & Chapitre 03",
+                level: "Niveau 4 à 5 • Wipe Complet / Bannissement",
+                badgeStyle: "bg-codex-crimsonDim border-codex-crimson/40 text-codex-crimson",
+                explanation: "Transférer de l'argent, des armes ou des informations entre deux personnages (même via un tiers) fausse l'économie semi-réaliste et les enquêtes.",
+                reflex: "Gérer chaque personnage comme une personne totalement étrangère à l'autre, sans jamais mélanger légal (forces de l'ordre) et illégal."
+            },
+            cheat: {
+                title: "Triche, Mod Menu, Macro ou Pack Graphique Interdit",
+                article: "GEN-07 & GEN-08",
+                level: "Niveau 5 • Bannissement Définitif Immédiat",
+                badgeStyle: "bg-codex-crimsonDim border-codex-crimson/40 text-codex-crimson",
+                explanation: "Toute modification logicielle ou visuelle supprimant la nuit, les buissons, le recul ou octroyant une aide à la visée rompt totalement l'équité du serveur.",
+                reflex: "Jouer avec un client FiveM propre et des packs graphiques uniquement esthétiques conservant la nuit noire et toute la végétation."
+            }
+        };
+
+        const sanctionSelect = document.getElementById('sanction-select');
+        const sanctionResultBox = document.getElementById('sanction-result-box');
+
+        function renderSanctionDetails() {
+            const data = sanctionsDB[sanctionSelect.value];
+            sanctionResultBox.innerHTML = `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3.5 border-b border-codex-border">
+                    <div>
+                        <span class="font-mono text-xs text-codex-gold">Référence : ${data.article}</span>
+                        <h4 class="font-display font-bold text-base text-codex-ink mt-0.5">${data.title}</h4>
+                    </div>
+                    <span class="px-3 py-1 rounded-md border font-mono text-xs font-semibold shrink-0 ${data.badgeStyle}">
+                        ${data.level}
+                    </span>
+                </div>
+                <p class="text-sm text-codex-muted leading-relaxed">${data.explanation}</p>
+                <div class="p-3.5 rounded-lg bg-codex-surface border border-codex-border text-xs sm:text-sm text-codex-ink">
+                    <span class="font-mono text-[11px] uppercase tracking-wider text-codex-gold block mb-1">Réflexe RP à adopter</span>
+                    <span class="text-codex-muted">${data.reflex}</span>
+                </div>
+            `;
+        }
+
+        sanctionSelect.addEventListener('change', renderSanctionDetails);
+        renderSanctionDetails();
+
+        // =========================================================================
+        // 3. RECHERCHE EN DIRECT & RACCOURCI CLAVIER (CTRL + K)
+        // =========================================================================
+        const searchInput = document.getElementById('search-input');
+        const searchShortcut = document.getElementById('search-shortcut');
+        const clearSearchBtn = document.getElementById('clear-search');
+        const searchCount = document.getElementById('search-count');
+        const sections = document.querySelectorAll('.rule-section');
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            if (e.key === 'Escape' && document.activeElement === searchInput) {
+                searchInput.value = '';
+                searchInput.dispatchEvent(new Event('input'));
+                searchInput.blur();
+            }
+        });
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.trim().toLowerCase();
+            const cards = document.querySelectorAll('.searchable-card');
+
+            if (!query) {
+                clearSearchBtn.classList.add('hidden');
+                searchShortcut.classList.remove('hidden');
+                searchCount.classList.add('hidden');
+                sections.forEach(sec => sec.classList.remove('hidden'));
+                cards.forEach(card => card.classList.remove('hidden'));
+                return;
+            }
+
+            searchShortcut.classList.add('hidden');
+            clearSearchBtn.classList.remove('hidden');
+            let matchedCount = 0;
+
+            cards.forEach(card => {
+                if (card.textContent.toLowerCase().includes(query)) {
+                    card.classList.remove('hidden');
+                    matchedCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            sections.forEach(sec => {
+                const visibleCards = sec.querySelectorAll('.searchable-card:not(.hidden)');
+                if (visibleCards.length > 0) {
+                    sec.classList.remove('hidden');
+                } else {
+                    sec.classList.add('hidden');
+                }
+            });
+
+            searchCount.textContent = `${matchedCount} résultat(s)`;
+            searchCount.classList.remove('hidden');
+        });
+
+        clearSearchBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            searchInput.dispatchEvent(new Event('input'));
+            searchInput.focus();
+        });
+
+        // =========================================================================
+        // 4. MENU MOBILE, SCROLL SPY & PROGRESSION DE LECTURE
+        // =========================================================================
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const closeMobileBtn = document.getElementById('close-mobile-btn');
+        const mobileDrawer = document.getElementById('mobile-drawer');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+        const desktopToc = document.getElementById('desktop-toc');
+        const mobileNavLinks = document.getElementById('mobile-nav-links');
+
+        // Duplication propre des liens du sommaire pour mobile
+        mobileNavLinks.innerHTML = desktopToc.innerHTML;
+
+        function openMobileMenu() {
+            mobileDrawer.classList.remove('hidden');
+        }
+        function closeMobileMenu() {
+            mobileDrawer.classList.add('hidden');
+        }
+
+        mobileBtn.addEventListener('click', openMobileMenu);
+        closeMobileBtn.addEventListener('click', closeMobileMenu);
+        mobileOverlay.addEventListener('click', closeMobileMenu);
+
+        mobileNavLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        const tocLinks = document.querySelectorAll('.toc-link');
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const percent = docHeight > 0 ? Math.min(100, Math.round((scrollTop / docHeight) * 100)) : 0;
+
+            document.getElementById('reading-progress').style.width = percent + '%';
+            document.getElementById('sidebar-progress-bar').style.width = percent + '%';
+            document.getElementById('sidebar-progress-text').textContent = percent + '%';
+
+            let currentId = '';
+            sections.forEach(section => {
+                if (!section.classList.contains('hidden')) {
+                    const sectionTop = section.offsetTop - 160;
+                    if (scrollTop >= sectionTop) {
+                        currentId = section.getAttribute('id');
+                    }
+                }
+            });
+
+            if (currentId) {
+                tocLinks.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === `#${currentId}`) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
